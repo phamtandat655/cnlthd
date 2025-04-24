@@ -5,6 +5,7 @@ import { CategoryModule } from './category/category.module';
 import { CommentModule } from './comment/comment.module';
 import { PostModule } from './post/post.module';
 import { UsersModule } from './users/users.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { UsersModule } from './users/users.module';
       autoLoadEntities: true,
     }),
     UsersModule,
+    AuthModule,
     ProfileModule,
     PostModule,
     CategoryModule,

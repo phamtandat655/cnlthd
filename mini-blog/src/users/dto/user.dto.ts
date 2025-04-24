@@ -1,4 +1,4 @@
-import { IsEnum, IsString, MinLength } from 'class-validator';
+import { IsEnum, IsOptional, IsString, MinLength, ValidateNested } from 'class-validator';
 import { Role } from '../../auth/roles.enum';
 
 export class CreateUserDto {
@@ -9,11 +9,6 @@ export class CreateUserDto {
   @IsString()
   @MinLength(6)
   password: string;
-
-  profile: {
-    fullname: "Nguyễn Văn A";
-    bio: "Viết giới thiệu về bản thân ở đây";
-  };
 
 }
 

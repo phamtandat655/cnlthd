@@ -6,7 +6,7 @@ export class Profile {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @Column()
+    @Column({nullable: true})
     fullname: string;
 
     @Column({nullable: true})

@@ -17,7 +17,7 @@ export class User{
     @Column({ enum: Role, default: Role.User})
     role: string;
 
-    @OneToOne(() => Profile, profile => profile.user, {cascade: true})
+    @OneToOne(() => Profile, profile => profile.user, {cascade: true, onDelete: 'SET NULL'})
     @JoinColumn()
     profile: Profile;
 

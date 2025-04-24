@@ -55,6 +55,7 @@ export class UsersService {
   async signIn(username: string, password: string): Promise<boolean> {   // xác thực user
     const user = await this.findByUsername(username);
     if (!user) return false;
+    console.log(password, user.password)
     return bcrypt.compare(password, user.password);
   }
 }

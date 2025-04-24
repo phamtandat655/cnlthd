@@ -11,13 +11,18 @@ export class UsersController {
 
     constructor(private usersService: UsersService) {}
 
-  @Post()
+    
+    @Post()
+    @UseGuards(RolesGuard)
+    @Roles(Role.Admin)    // Chỉ có admin mới được tạo user thủ công
     create(@Body() dto: CreateUserDto) {
       return this.usersService.create(dto);
     }
   
   
-    @Get('user/:userId')
+    @Get(':userId')
+    @UseGuards(RolesGuard)
+    @Roles(Role.Admin)    // Chỉ có admin mới tìm user dựa trên ID
     findByUser(@Param('userId') userId: string) {
       return this.usersService.findOne(+userId);
     }
@@ -34,15 +39,8 @@ export class UsersController {
 
 
     @UseGuards(RolesGuard)
-    @Roles(Role.Admin)  // Chỉ có admin mới xem được danh sách user
-    @Get()
-    getProfile(@Req() req) {
-        return req.user;
-    }
-
-    @UseGuards(RolesGuard)
     @Roles(Role.Admin)    // Chỉ có admin mới xem được danh sách user
-    @Get("list")
+    @Get()
     getAllUser() {
         return this.usersService.findAll();
     }

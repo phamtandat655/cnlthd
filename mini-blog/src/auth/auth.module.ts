@@ -20,7 +20,7 @@ import { jwtConstants } from './auth.constants';
     AuthService,
     {
       provide: APP_GUARD,
-      useClass: AuthGuard,
+      useClass: AuthGuard,            // Áp dụng AuthGuard cho toàn bộ route ko có @Public
     },
   ],
   

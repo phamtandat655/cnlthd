@@ -22,7 +22,7 @@ export class AuthService {
       throw new UnauthorizedException('Sai username hoặc password');
     }
     
-    const payload = { username: user.username, sub: user.id, role: user.role };
+    const payload = { username: user.username, id: user.id, role: user.role };
 
     return {
       access_token: await this.jwtService.signAsync(payload),   // Trả về token khi xác thực thành công
