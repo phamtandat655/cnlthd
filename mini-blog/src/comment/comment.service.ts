@@ -15,8 +15,8 @@ export class CommentService {
     @InjectRepository(Post) private postRepository: Repository<Post>,
   ) {}
 
-  async create(dto: CreateCommentDto): Promise<Comment> {
-    const user = await this.userRepository.findOneBy({ id: dto.userId });
+  async create(dto: CreateCommentDto, currentUser: any): Promise<Comment> {
+    const user = await this.userRepository.findOneBy({ id: currentUser.id });
     const post = await this.postRepository.findOneBy({ id: dto.postId });
 
     if (!user || !post) throw new NotFoundException('Không tìm thấy user hoặc post');

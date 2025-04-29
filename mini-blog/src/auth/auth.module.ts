@@ -13,7 +13,7 @@ import { jwtConstants } from './auth.constants';
     JwtModule.register({
       global: true,  //Đặt JwtModule là module toàn cục, không cần import lại ở nơi khác.
       secret: jwtConstants.secret,  // Khóa bí mật dùng để mã hóa token
-      signOptions: { expiresIn: '200s' }, // Token sẽ hết hạn sau 200 giây 
+      signOptions: { expiresIn: '500s' }, // Token sẽ hết hạn sau 500 giây 
     }),
   ],
   providers: [

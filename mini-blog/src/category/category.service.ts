@@ -32,6 +32,8 @@ export class CategoryService {
     return this.categoryRepository.find({ relations: ['posts'] });
   }
 
+  
+
   findOne(id: number) {
     return this.categoryRepository.findOne({ where: { id }, relations: ['posts'] });
   }

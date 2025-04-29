@@ -1,5 +1,5 @@
 // post.service.ts
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Category } from 'src/entities/category.entity';
 import { Post } from '../entities/post.entity';
@@ -16,11 +16,11 @@ export class PostService {
 ) {}
 
   // post.service.ts (phần tạo post)
-async create(dto: CreatePostDto): Promise<Post> {
-    const user = await this.userRepository.findOneBy({ id: dto.userId });
+async create(dto: CreatePostDto, currentUser: any): Promise<Post> {
+    const user = await this.userRepository.findOneBy({ id: currentUser.id });
     if (!user) throw new NotFoundException('User không tồn tại');
-  
-    const categories = await this.categoryRepository.findBy({ id: In(dto.categoryIds) });
+
+    const categories = await this.categoryRepository.find({ where: { name: In(dto.category) }});
   
     const post = this.postRepository.create({
       title: dto.title,
@@ -41,15 +41,29 @@ async create(dto: CreatePostDto): Promise<Post> {
     return this.postRepository.find({ where: { user: { id: userId } }, relations: ['user'] });
   }
 
-  async update(id: number, dto: UpdatePostDto): Promise<Post> {
-    const post = await this.postRepository.findOneBy({ id });
+  async update(id: number, dto: UpdatePostDto, currentUser: any): Promise<Post> {
+    const post = await this.postRepository.findOne({ where:{id} , relations: ['user']});
     if (!post) throw new NotFoundException('Không tìm thấy post');
 
+    // Nếu không phải admin, phải là chủ sở hữu mới được sửa
+    if (currentUser.role !== 'admin' && post.user.id !== currentUser.id) {
+    throw new ForbiddenException('Bạn không thể chỉnh sửa post này');
+    }
+    const categories = await this.categoryRepository.find({ where: { name: In(dto.category) }});
     Object.assign(post, dto);
+    post.category = categories;
     return this.postRepository.save(post);
   }
 
-  async remove(id: number): Promise<void> {
+  async remove(id: number, currentUser: any): Promise<void> {
+
+    const post = await this.postRepository.findOne({ where:{id} , relations: ['user']});
+    if (!post) throw new NotFoundException('Không tìm thấy post');
+
+     // Nếu không phải admin, phải là chủ sở hữu mới được sửa
+    if (currentUser.role !== 'admin' && post.user.id !== currentUser.id) {
+    throw new ForbiddenException('Bạn không thể xoá post này');
+    }
     await this.postRepository.delete(id);
   }
 }

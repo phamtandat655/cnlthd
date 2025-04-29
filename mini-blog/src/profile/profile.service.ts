@@ -35,24 +35,23 @@ export class ProfileService {
     return this.profileRepository.findOne({ where: { id }, relations: ['user'] });
   }
 
-  async update(id: number, dto: UpdateProfileDto, user: any): Promise<Profile> {
+  async update(id: number, dto: UpdateProfileDto, currentUser: any): Promise<Profile> {
     const profile = await this.profileRepository.findOne({ where:{id} , relations: ['user']});
     if (!profile) throw new NotFoundException('Không tìm thấy profile');
 
-    console.log(user.id, profile.user.id)
     // Nếu không phải admin, phải là chủ sở hữu mới được sửa
-    if (user.role !== 'admin' && profile.user.id !== user.id) {
+    if (currentUser.role !== 'admin' && profile.user.id !== currentUser.id) {
     throw new ForbiddenException('Bạn không thể chỉnh sửa profile này');
     }
     Object.assign(profile, dto);
     return this.profileRepository.save(profile);
   }
 
-  async remove(id: number, user: any): Promise<void> {
+  async remove(id: number, currentUser: any): Promise<void> {
     const profile = await this.profileRepository.findOne({ where:{id} , relations: ['user']});
     if (!profile) throw new NotFoundException('Không tìm thấy profile');
     // Nếu không phải admin, phải là chủ sở hữu mới được xoá
-    if (user.role !== 'admin' && profile.user.id !== user.userId) {
+    if (currentUser.role !== 'admin' && profile.user.id !== currentUser.userId) {
       throw new ForbiddenException('Bạn không thể xoá profile này');
     }
     await this.profileRepository.delete(id);

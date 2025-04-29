@@ -2,11 +2,12 @@ export class CreatePostDto {
     title: string;
     content: string;
     userId: number;
-    categoryIds: number[];
+    category: string[];
 }
   
   
 export class UpdatePostDto {
     title: string;
     content: string;
+    category: string[];
 }
